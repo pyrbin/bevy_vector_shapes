@@ -95,7 +95,12 @@ fn p_to_camera_dir(p: vec3<f32>) -> vec3<f32> {
 #endif
 
 #ifdef PIPELINE_3D
-    return normalize(view.world_position - p);
+    let is_orthographic = view.projection[3].w == 1.0;
+    if is_orthographic {
+        return transpose(view.inverse_view)[2].xyz;
+    } else {
+        return normalize(view.world_position - p);
+    }
 #endif
 }
 
